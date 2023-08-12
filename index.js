@@ -12,7 +12,8 @@ const openai = new OpenAIApi(configuration);
 const GTP_MODEL = "gpt-3.5-turbo-16k";
 const MAX_TOKENS_PER_CHUNK = 8000;
 const TRANSCRIPT_LANGUAGE = "spanish";
-const TRANSCRIPT_WORDS_LENGTH = 200;
+const TRANSCRIPT_WORDS_MIN_LENGTH = 200;
+const TRANSCRIPT_WORDS_MAX_LENGTH = 400;
 const VIDEO_CLIP_LENGTH = 60;
 const VIDEO_TOPICS = [
   "tech",
@@ -25,33 +26,28 @@ const VIDEO_TOPICS = [
   "html",
   "career",
   "development",
+  "programming",
+  "inspiration",
 ];
 
 function buildMessages(text) {
   return [
     {
       role: "system",
-      content: `Given a transcript in ${TRANSCRIPT_LANGUAGE} from a video, identify and extract the most interesting and meaningful dialogues that would fit a ${VIDEO_CLIP_LENGTH} seconds video clip.
+      content: `You are processing a transcript from a live streaming video in ${TRANSCRIPT_LANGUAGE}. Your task is to extract engaging and meaningful dialogues related to the topics: ${VIDEO_TOPICS.join(
+        ", "
+      )}
 	  
-	  Each dialogue should be concise, engaging, and at most ${TRANSCRIPT_WORDS_LENGTH} words in length.
-	  
-	  Please provide the extracted dialogues exactly as they were from the original transcript and suggest a possible title for each extracted dialogue.
+      These dialogues should:
+      - Fit a ${VIDEO_CLIP_LENGTH}-second video clip.
+      - Be between ${TRANSCRIPT_WORDS_MIN_LENGTH} and ${TRANSCRIPT_WORDS_MAX_LENGTH} words long but ignore filler words, greetings, alerts, and other non-dialogue audio.
+      - Be complete thoughts or standalone discussions, understandable without the context of the full video.
 
-	  Don't modify the original transcript in any way, only extract the dialogues that would fit a ${VIDEO_CLIP_LENGTH} seconds video clip.
-	  
-	  Ensure the dialogues are complete thoughts or discussions that can stand alone for viewers who haven't seen the original video.
-	  
-	  The topics that we are looking for is anything related to: ${VIDEO_TOPICS.join(
-      ", "
-    )}.	
+      Please do not modify the extracted dialogues keep them exactly as they were in the original transcript. If no relevant dialogues are found, return an empty array.
 
-	Since this transcript is form a live streaming video, exclude any greetings, alerts, or other non-dialogue audio as consideration from the possible dialogues.
-
-	It's completly fine if you don't find any relevant dialogues in the transcript, in that case return an empty array.
-
-	The title and dialogue should be written in ${TRANSCRIPT_LANGUAGE}.
-
-	Please keep the output format as JSON, with the property 'title' and 'dialogue'.
+      The output should be in JSON format, with properties 'title' and 'dialogue' for each dialogue, both written in ${TRANSCRIPT_LANGUAGE}.
+      
+      The 'title' should be an engaging summary of the dialogue.
 	`,
     },
     {
