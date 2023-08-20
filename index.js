@@ -10,7 +10,7 @@ const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
 
 const GTP_MODEL = "gpt-3.5-turbo-16k";
-const MAX_TOKENS_PER_CHUNK = 8000;
+const MAX_TOKENS_PER_CHUNK = 10000;
 const TRANSCRIPT_LANGUAGE = "spanish";
 const TRANSCRIPT_WORDS_MIN_LENGTH = 200;
 const TRANSCRIPT_WORDS_MAX_LENGTH = 400;
@@ -25,6 +25,10 @@ const VIDEO_TOPICS = [
   "css",
   "html",
   "career",
+  "sotrybook",
+  "testing",
+  "security",
+  "ideas",
   "development",
   "programming",
   "inspiration",
@@ -42,8 +46,9 @@ function buildMessages(text) {
       - Fit a ${VIDEO_CLIP_LENGTH}-second video clip.
       - Be between ${TRANSCRIPT_WORDS_MIN_LENGTH} and ${TRANSCRIPT_WORDS_MAX_LENGTH} words long but ignore filler words, greetings, alerts, and other non-dialogue audio.
       - Be complete thoughts or standalone discussions, understandable without the context of the full video.
-
-      Please do not modify the extracted dialogues keep them exactly as they were in the original transcript. If no relevant dialogues are found, return an empty array.
+      -Do not modify the extracted dialogues keep them exactly as they were in the original transcript.
+      - Do not alter the original structure, or create summaries,or create new ideas: keep the original text.
+      - If no relevant dialogues are found, return an empty array.
 
       The output should be in JSON format, with properties 'title' and 'dialogue' for each dialogue, both written in ${TRANSCRIPT_LANGUAGE}.
       
