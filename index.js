@@ -12,6 +12,7 @@ import {
   estimateTokenCount,
   calculateMaxChunkSize,
   processChunk,
+  processDialogues,
 } from "./textProcessing.js";
 import { buildMessages } from "./promptBuilder.js";
 
@@ -43,6 +44,7 @@ async function getDialogs(inputFilePath) {
     while (startIndex < text.length) {
       const systemMessage = buildMessages("")[0];
       const systemMessageTokenCount = estimateTokenCount(systemMessage.content);
+
       const maxChunkSize = calculateMaxChunkSize(
         systemMessageTokenCount,
         MODEL_TOKEN_LIMIT,
@@ -59,6 +61,7 @@ async function getDialogs(inputFilePath) {
           endIndex,
         );
         responseContent.push(chunkContent);
+
         titles.push(...chunkContent.map((item) => item.title));
       } catch (processError) {
         console.error("Error processing chunk:", processError.message);
@@ -67,10 +70,15 @@ async function getDialogs(inputFilePath) {
       startIndex = endIndex;
     }
 
-    await writeOutputFile(outputFilePath, responseContent.flat());
+    responseContent = responseContent.flat();
+    responseContent = processDialogues(responseContent);
+
+    await writeOutputFile(outputFilePath, responseContent);
+
     const endTime = Date.now();
     const totalTime = ((endTime - startTime) / 1000).toFixed(2);
     printSummary(timestamp, titles, totalTime, text.length);
+
   } catch (error) {
     console.error("General error:", error.message);
   }

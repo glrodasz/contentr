@@ -48,3 +48,23 @@ export async function processChunk(text, startIndex, endIndex) {
 
   return parsedContent;
 }
+
+export function processDialogues(dialogueArray) {
+  dialogueArray.forEach((dialogueObj) => {
+    if (dialogueObj.dialogue) {
+      // Count characters
+      const charCount = dialogueObj.dialogue.length;
+
+      // Count words
+      const wordCount = dialogueObj.dialogue
+        .split(/\s+/)
+        .filter(Boolean).length;
+
+      // Add these counts to the object
+      dialogueObj.chars = charCount;
+      dialogueObj.words = wordCount;
+    }
+  });
+
+  return dialogueArray;
+}
