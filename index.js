@@ -1,107 +1,79 @@
-import dotenv from "dotenv";
-dotenv.config();
+import {
+  createFolder,
+  copyFile,
+  readFileContent,
+  writeOutputFile,
+} from "./fileOperations.js";
 
-import fs from "node:fs/promises";
-import { Configuration, OpenAIApi } from "openai";
+import { displayProgressBar } from "./progressBar.js";
 
-const { OPENAI_API_KEY } = process.env;
+import {
+  findNearestSentenceEnd,
+  estimateTokenCount,
+  calculateMaxChunkSize,
+  processChunk,
+} from "./textProcessing.js";
+import { buildMessages } from "./promptBuilder.js";
 
-const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
-const openai = new OpenAIApi(configuration);
+import { printSummary } from "./summary.js";
 
-const GTP_MODEL = "gpt-3.5-turbo-16k";
-const MAX_TOKENS_PER_CHUNK = 10000;
-const TRANSCRIPT_LANGUAGE = "spanish";
-const TRANSCRIPT_WORDS_MIN_LENGTH = 200;
-const TRANSCRIPT_WORDS_MAX_LENGTH = 400;
-const VIDEO_CLIP_LENGTH = 60;
-const VIDEO_TOPICS = [
-  "tech",
-  "javascript",
-  "react",
-  "soft skills",
-  "node",
-  "design systems",
-  "css",
-  "html",
-  "career",
-  "sotrybook",
-  "testing",
-  "security",
-  "ideas",
-  "development",
-  "programming",
-  "inspiration",
-];
+import { MODEL_TOKEN_LIMIT, SAFETY_MARGIN } from "./config.js";
 
-function buildMessages(text) {
-  return [
-    {
-      role: "system",
-      content: `You are processing a transcript from a live streaming video in ${TRANSCRIPT_LANGUAGE}. Your task is to extract engaging and meaningful dialogues related to the topics: ${VIDEO_TOPICS.join(
-        ", "
-      )}
-	  
-      These dialogues should:
-      - Fit a ${VIDEO_CLIP_LENGTH}-second video clip.
-      - Be between ${TRANSCRIPT_WORDS_MIN_LENGTH} and ${TRANSCRIPT_WORDS_MAX_LENGTH} words long but ignore filler words, greetings, alerts, and other non-dialogue audio.
-      - Be complete thoughts or standalone discussions, understandable without the context of the full video.
-      -Do not modify the extracted dialogues keep them exactly as they were in the original transcript.
-      - Do not alter the original structure, or create summaries,or create new ideas: keep the original text.
-      - If no relevant dialogues are found, return an empty array.
-
-      The output should be in JSON format, with properties 'title' and 'dialogue' for each dialogue, both written in ${TRANSCRIPT_LANGUAGE}.
-      
-      The 'title' should be an engaging summary of the dialogue.
-	`,
-    },
-    {
-      role: "user",
-      content: `Extract the meaningful dialogues from the following transcript:
-	  \`\`\`
-	  ${text}
-	  \`\`\`
-	  `,
-    },
-  ];
+function getTimestamp() {
+  return new Date().toISOString().replace(/[:.]/g, "-");
 }
 
-async function getDialogs() {
-  try {
-    const text = await fs.readFile("input.txt", "utf-8");
+async function getDialogs(inputFilePath) {
+  const startTime = Date.now();
+  const timestamp = getTimestamp();
+  const resultFolderPath = `results/${timestamp}`;
+  const inputFileCopyPath = `${resultFolderPath}/input.txt`;
+  const outputFilePath = `${resultFolderPath}/output.json`;
 
+  try {
+    await createFolder(resultFolderPath);
+    await copyFile(inputFilePath, inputFileCopyPath);
+
+    const text = await readFileContent(inputFilePath);
     let startIndex = 0;
-    let endIndex = MAX_TOKENS_PER_CHUNK;
+    let endIndex;
     let responseContent = [];
+    let titles = [];
 
     while (startIndex < text.length) {
-      console.log(
-        `Processing chunk ${startIndex} to ${endIndex} of ${text.length}...`
+      const systemMessage = buildMessages("")[0];
+      const systemMessageTokenCount = estimateTokenCount(systemMessage.content);
+      const maxChunkSize = calculateMaxChunkSize(
+        systemMessageTokenCount,
+        MODEL_TOKEN_LIMIT,
+        SAFETY_MARGIN
       );
-      const chunk = text.slice(startIndex, endIndex);
 
-      const response = await openai.createChatCompletion({
-        model: GTP_MODEL,
-        messages: buildMessages(chunk),
-        temperature: 0,
-      });
+      endIndex = findNearestSentenceEnd(text, startIndex, maxChunkSize);
+      displayProgressBar(endIndex, text.length);
 
-      const content =
-        response.data?.choices?.[0]?.message?.content?.trim() ?? "";
+      try {
+        const chunkContent = await processChunk(
+          text,
+          startIndex,
+          endIndex,
+        );
+        responseContent.push(chunkContent);
+        titles.push(...chunkContent.map((item) => item.title));
+      } catch (processError) {
+        console.error("Error processing chunk:", processError.message);
+      }
 
-      // Parse the JSON content and push to responseContent array.
-      responseContent.push(JSON.parse(content));
-
-      // Move the startIndex and endIndex for the next chunk of text.
-      startIndex += MAX_TOKENS_PER_CHUNK;
-      endIndex += MAX_TOKENS_PER_CHUNK;
+      startIndex = endIndex;
     }
 
-    // Write the accumulated responses to a JSON file.
-    await fs.writeFile("output.json", JSON.stringify(responseContent.flat()));
+    await writeOutputFile(outputFilePath, responseContent.flat());
+    const endTime = Date.now();
+    const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+    printSummary(timestamp, titles, totalTime, text.length);
   } catch (error) {
-    console.error(error, error.message);
+    console.error("General error:", error.message);
   }
 }
 
-await getDialogs();
+getDialogs("./input.txt");

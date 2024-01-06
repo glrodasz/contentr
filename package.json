@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node index.js"},
+    "debug": "node --inspect index.js",
+    "start": "node index.js"
+  },
   "dependencies": {
     "dotenv": "^16.3.1",
     "openai": "^3.3.0"
