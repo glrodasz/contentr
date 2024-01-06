@@ -12,10 +12,12 @@ const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
 
 export async function fetchChatCompletion(chunk) {
+  const messages = buildMessages(chunk);
+
   try {
     const response = await openai.createChatCompletion({
       model: GTP_MODEL,
-      messages: buildMessages(chunk),
+      messages,
       temperature: 0,
     });
     return response.data?.choices?.[0]?.message?.content?.trim() ?? "";

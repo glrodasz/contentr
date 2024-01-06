@@ -6,5 +6,5 @@ export function displayProgressBar(current, total) {
 
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(`Processing: ${progressBar} ${percentage}%`);
+    process.stdout.write(`Processing: ${progressBar} ${percentage}%\n`);
 }

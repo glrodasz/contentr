@@ -20,19 +20,21 @@ export function estimateTokenCount(text) {
   return Math.ceil(text.length / averageWordLength);
 }
 
+const RESPONSE_TOKEN_PERCENTAGE_ALLOCATION = 30;
+
 export function calculateMaxChunkSize(
-  buildMessageTokens,
+  promptTokenCount,
   MODEL_TOKEN_LIMIT,
   SAFETY_MARGIN
 ) {
-  return MODEL_TOKEN_LIMIT - buildMessageTokens - SAFETY_MARGIN;
+  const responseTokenEstimate =
+    MODEL_TOKEN_LIMIT * (RESPONSE_TOKEN_PERCENTAGE_ALLOCATION / 100);
+  return (
+    MODEL_TOKEN_LIMIT - promptTokenCount - responseTokenEstimate - SAFETY_MARGIN
+  );
 }
 
-export async function processChunk(
-  text,
-  startIndex,
-  endIndex
-) {
+export async function processChunk(text, startIndex, endIndex) {
   const chunk = text.slice(startIndex, endIndex);
   const content = await fetchChatCompletion(chunk);
 
