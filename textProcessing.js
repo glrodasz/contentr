@@ -1,18 +1,23 @@
+import { SENTENCE_END_THRESHOLD_PERCENTAGE } from "./config.js";
 import { fetchChatCompletion } from "./apiCalls.js";
 
-export function findNearestSentenceEnd(text, startIndex, maxChunkSize) {
+export function resolveEndIndex(text, startIndex, maxChunkSize) {
   const endIndex = Math.min(startIndex + maxChunkSize, text.length);
   const chunk = text.slice(startIndex, endIndex);
 
-  const lastPeriod = chunk.lastIndexOf(".");
-  const lastQuestion = chunk.lastIndexOf("?");
-  const lastExclamation = chunk.lastIndexOf("!");
+  const lastPeriod = chunk.lastIndexOf('.');
+  const lastQuestion = chunk.lastIndexOf('?');
+  const lastExclamation = chunk.lastIndexOf('!');
 
   const nearestEnd = Math.max(lastPeriod, lastQuestion, lastExclamation);
 
-  return nearestEnd === -1 || nearestEnd === chunk.length - 1
-    ? endIndex
-    : startIndex + nearestEnd + 1;
+  if (nearestEnd === -1 || nearestEnd === chunk.length - 1) {
+      return endIndex;
+  } else {
+      // Check if the nearestEnd is beyond the specified percentage of the chunk
+      const threshold = chunk.length * (SENTENCE_END_THRESHOLD_PERCENTAGE / 100);
+      return nearestEnd > threshold ? startIndex + nearestEnd + 1 : endIndex;
+  }
 }
 
 export function estimateTokenCount(text) {

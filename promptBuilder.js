@@ -1,14 +1,6 @@
 import { buildTopics } from "./buildTopics.js";
+import { TOPICS } from "./config.js";
 
-const TOPICS = [
-  "technology",
-  "programming",
-  "javascript",
-  "react",
-  "design",
-  "soft skills",
-  "personal development",
-];
 
 export function buildMessages(text) {
   return [

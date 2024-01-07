@@ -8,7 +8,7 @@ import {
 import { displayProgressBar } from "./progressBar.js";
 
 import {
-  findNearestSentenceEnd,
+  resolveEndIndex,
   estimateTokenCount,
   calculateMaxChunkSize,
   processChunk,
@@ -51,7 +51,7 @@ async function getDialogs(inputFilePath) {
         SAFETY_MARGIN
       );
 
-      endIndex = findNearestSentenceEnd(text, startIndex, maxChunkSize);
+      endIndex = resolveEndIndex(text, startIndex, maxChunkSize);
       displayProgressBar(endIndex, text.length);
 
       try {
