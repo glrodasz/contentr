@@ -8,12 +8,12 @@ import {
 import { displayProgressBar } from "./progressBar.js";
 
 import {
-  resolveEndIndex,
   estimateTokenCount,
   calculateMaxChunkSize,
   processChunk,
   processDialogues,
 } from "./textProcessing.js";
+import { resolveEndIndex } from "./resolveEndIndex.js";
 import { buildMessages } from "./promptBuilder.js";
 
 import { printSummary } from "./summary.js";

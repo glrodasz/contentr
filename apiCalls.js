@@ -12,7 +12,10 @@ const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
 
 export async function fetchChatCompletion(chunk) {
-  const messages = buildMessages(chunk);
+  const messages = buildMessages(chunk).map((message) => ({
+    ...message,
+    content: message.content.trim(),
+  }));
 
   try {
     const response = await openai.createChatCompletion({
