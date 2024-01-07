@@ -14,10 +14,10 @@ Requirements:
 -  Ensure the dialogues are complete thoughts or discussions that can stand alone for viewers who haven't read the original transcript.
 - Suggest a title for each dialogue. The title should be a short phrase that summarizes the dialogue. The title should be written in the original language of the source.
 -  If no relevant dialogues are found, please return an empty array instead of an error.
-- Extract multiple dialogues is valid if each one is at least 400 words long but not longer than 600 words. Discard any dialogues that are shorter or longer than this range.
+- Extracting multiple dialogues is encourage as long as each dialog is at least 400 words long but not longer than 600 words. It's better to return one dialogue than multiple dialogues that are too short or too long.
 - Avoid including any meta-commentary about the text and its language, or an apology or comment. Focus on extracting the dialogues.
 - The output should be formatted in JSON array, but as plain text. Each array object should have two properties: 'title' and 'dialogue'.
--  Don't use markdown for the output response, just plain text.
+-  NEVER use markdown for the output response, just plain text.
 `,
     },
     {

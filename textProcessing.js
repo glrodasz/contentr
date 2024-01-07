@@ -1,6 +1,4 @@
-import {
-  RESPONSE_TOKEN_PERCENTAGE_ALLOCATION,
-} from "./config.js";
+import { RESPONSE_TOKEN_PERCENTAGE_ALLOCATION } from "./config.js";
 import { fetchChatCompletion } from "./apiCalls.js";
 
 export function estimateTokenCount(text) {
@@ -20,19 +18,41 @@ export function calculateMaxChunkSize(
   );
 }
 
+function cleanMarkdown(response) {
+  // Check if "```json" is present in the response
+  if (response.includes("```json")) {
+    // Use regular expressions to extract JSON content
+    const jsonPattern = /```json([\s\S]*?)```/;
+    const match = response.match(jsonPattern);
+
+    // If a match is found, extract the JSON content
+    if (match) {
+      const jsonContent = match[1].trim();
+      return jsonContent;
+    }
+  }
+
+  // If "```json" is not present, return the original response
+  return response;
+}
+
 export async function processChunk(text, startIndex, endIndex) {
   const chunk = text.slice(startIndex, endIndex);
   const content = await fetchChatCompletion(chunk);
 
   let parsedContent;
   try {
-    parsedContent = JSON.parse(content);
+    parsedContent = JSON.parse(cleanMarkdown(content));
   } catch (error) {
     console.error("Error parsing JSON:", error.message);
     throw error;
   }
 
   return parsedContent;
+}
+
+export function countWords(text) {
+  return text.split(/\s+/).filter(Boolean).length;
 }
 
 export function processDialogues(dialogueArray) {
@@ -42,9 +62,7 @@ export function processDialogues(dialogueArray) {
       const charCount = dialogueObj.dialogue.length;
 
       // Count words
-      const wordCount = dialogueObj.dialogue
-        .split(/\s+/)
-        .filter(Boolean).length;
+      const wordCount = countWords(dialogueObj.dialogue);
 
       // Add these counts to the object
       dialogueObj.chars = charCount;

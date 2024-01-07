@@ -12,6 +12,7 @@ import {
   calculateMaxChunkSize,
   processChunk,
   processDialogues,
+  countWords,
 } from "./textProcessing.js";
 import { resolveEndIndex } from "./resolveEndIndex.js";
 import { buildMessages } from "./promptBuilder.js";
@@ -55,14 +56,14 @@ async function getDialogs(inputFilePath) {
       displayProgressBar(endIndex, text.length);
 
       try {
-        const chunkContent = await processChunk(
-          text,
-          startIndex,
-          endIndex,
-        );
+        const chunkContent = await processChunk(text, startIndex, endIndex);
         responseContent.push(chunkContent);
 
-        titles.push(...chunkContent.map((item) => item.title));
+        titles.push(
+          ...chunkContent.map(
+            (item) => `${item.title} (${countWords(item.dialogue)} words)`
+          )
+        );
       } catch (processError) {
         console.error("Error processing chunk:", processError.message);
       }
@@ -78,7 +79,6 @@ async function getDialogs(inputFilePath) {
     const endTime = Date.now();
     const totalTime = ((endTime - startTime) / 1000).toFixed(2);
     printSummary(timestamp, titles, totalTime, text.length);
-
   } catch (error) {
     console.error("General error:", error.message);
   }
