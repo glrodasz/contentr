@@ -1,6 +1,9 @@
-import { TOPICS } from "./config.js";
+import { buildTopics } from "../../helpers/buildTopics.js";
+import { topics } from "./topics.js";
 
-export function buildMessages(text) {
+const formmatedTopics = buildTopics(topics);
+
+export function extractDialogsPrompt(text) {
   return [
     {
       role: "system",

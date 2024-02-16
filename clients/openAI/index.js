@@ -1,18 +1,14 @@
 import dotenv from "dotenv";
-
-import { Configuration, OpenAIApi } from "openai";
-
-import { buildMessages } from "./promptBuilder.js";
-import { GTP_MODEL } from "./config.js";
-
 dotenv.config();
 
-const { OPENAI_API_KEY } = process.env;
-const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
+import { Configuration, OpenAIApi } from "openai";
+import { GTP_MODEL } from "./config.js";
+
+const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
 
-export async function fetchChatCompletion(chunk) {
-  const messages = buildMessages(chunk).map((message) => ({
+export async function fetchChatCompletion(chunk, promptBuilder) {
+  const messages = promptBuilder(chunk).map((message) => ({
     ...message,
     content: message.content.trim(),
   }));
