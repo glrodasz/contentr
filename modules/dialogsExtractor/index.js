@@ -3,14 +3,14 @@ import {
   countWords,
   displayProgressBar,
   getTimestamp,
-} from "../../utils";
+} from "../../utils/index.js";
 
 import {
   resolveEndIndex,
   estimateTokenCount,
   calculateMaxChunkSize,
   processChunk
-} from "../../helpers";
+} from "../../helpers/index.js";
 
 import { MODEL_TOKEN_LIMIT } from "../../clients/openAI/config.js";
 

@@ -1,3 +1,3 @@
-import { extractDialogs } from "./modules/dialogsExtractor";
+import { extractDialogs } from "./modules/dialogsExtractor/index.js";
 
 extractDialogs("./input.txt");

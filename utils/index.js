@@ -1,4 +1,4 @@
-export { countWords } from "./countWords";
-export { displayProgressBar } from "./displayProgressBar";
-export { getTimestamp } from "./getTimestamp";
+export { countWords } from "./countWords.js";
+export { displayProgressBar } from "./displayProgressBar.js";
+export { getTimestamp } from "./getTimestamp.js";
 export * as fileOperations from "./fileOperations.js";

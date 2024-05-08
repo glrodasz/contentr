@@ -1,5 +1,5 @@
-import { cleanJsonMarkdown } from "../modules/dialogsExtractor";
-import { fetchChatCompletion } from "../clients/openAI";
+import { cleanJsonMarkdown } from "../helpers/cleanJsonMarkdown.js";
+import { fetchChatCompletion } from "../clients/openAI/index.js";
 
 
 export async function processChunk(text, promptBuilder, startIndex, endIndex) {
