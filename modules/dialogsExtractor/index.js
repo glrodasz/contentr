@@ -3,16 +3,21 @@ import {
   countWords,
   displayProgressBar,
   getTimestamp,
+  time,
+  sleep
 } from "../../utils/index.js";
 
 import {
   resolveEndIndex,
   estimateTokenCount,
   calculateMaxChunkSize,
-  processChunk
+  processChunk,
 } from "../../helpers/index.js";
 
-import { MODEL_TOKEN_LIMIT } from "../../clients/openAI/config.js";
+import {
+  MODEL_TOKEN_LIMIT,
+  REQUEST_PER_MINUTE,
+} from "../../clients/openAI/config.js";
 
 import { extractDialogsPrompt } from "./prompt.js";
 import { processDialogues } from "./processDialogues.js";
@@ -41,20 +46,32 @@ export async function extractDialogs(inputFilePath) {
     let endIndex;
     let responseContent = [];
     let titles = [];
+    let requestCount = 0;
 
     while (startIndex < text.length) {
       const systemMessageTokenCount = estimateTokenCount(getSystemMessage());
 
-      const maxChunkSize = calculateMaxChunkSize(
+      const maxTokenChunkSize = calculateMaxChunkSize(
         systemMessageTokenCount,
         MODEL_TOKEN_LIMIT
       );
 
-      endIndex = resolveEndIndex(text, startIndex, maxChunkSize);
+      endIndex = resolveEndIndex(text, startIndex, maxTokenChunkSize);
+
       displayProgressBar(endIndex, text.length);
 
+      if (requestCount >= REQUEST_PER_MINUTE) {
+        await sleep(time.ONE_MINUTE_IN_MS);
+        requestCount = 0;
+      }
+
       try {
-        const chunkContent = await processChunk(text, extractDialogsPrompt, startIndex, endIndex, );
+        const chunkContent = await processChunk(
+          text,
+          extractDialogsPrompt,
+          startIndex,
+          endIndex
+        );
         responseContent.push(chunkContent);
 
         titles.push(
@@ -64,6 +81,8 @@ export async function extractDialogs(inputFilePath) {
         );
       } catch (processError) {
         console.error("Error processing chunk:", processError.message);
+      } finally {
+        requestCount++;
       }
 
       startIndex = endIndex;

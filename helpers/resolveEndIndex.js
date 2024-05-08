@@ -1,3 +1,5 @@
+import { AVERAGE_WORD_LENGTH } from "./estimateTokenCount.js";
+
 export const SENTENCE_END_THRESHOLD_PERCENTAGE = 75;
 
 function findSentenceEndIndices(chunk) {
@@ -17,8 +19,8 @@ function isBeyondThreshold(nearestEnd, threshold) {
   return nearestEnd > threshold;
 }
 
-export function resolveEndIndex(text, startIndex, maxChunkSize) {
-  const endIndex = Math.min(startIndex + maxChunkSize, text.length);
+export function resolveEndIndex(text, startIndex, maxTokenChunkSize) {
+  const endIndex = Math.min(startIndex + (maxTokenChunkSize * AVERAGE_WORD_LENGTH), text.length);
   const chunk = text.slice(startIndex, endIndex);
 
   const sentenceEndIndices = findSentenceEndIndices(chunk);

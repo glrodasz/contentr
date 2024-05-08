@@ -1,7 +1,7 @@
 import { buildTopics } from "../../helpers/buildTopics.js";
 import { topics } from "./topics.js";
 
-const formmatedTopics = buildTopics(topics);
+const formattedTopics = buildTopics(topics);
 
 export function extractDialogsPrompt(text) {
   return [
@@ -10,7 +10,7 @@ export function extractDialogsPrompt(text) {
       content: `
 Extract dialogues from a given text source. The source is a transcript that could be a podcast, a YouTube video, a recorded live stream, or similar source.
 
-The key task is to identify and extract one or more dialogues that are relevant, engaging, and meaningful on topics such as ${formmatedTopics}.
+The key task is to identify and extract one or more dialogues that are relevant, engaging, and meaningful on topics such as ${formattedTopics}.
 
 Requirements:
 - Maintain the integrity of the original transcript. Do not modify, alter the structure, summarize, or create new content based on the original text. Keep the dialogues exactly as they were in the source.
