@@ -5,6 +5,8 @@ export async function processChunk(text, promptBuilder, startIndex, endIndex) {
   const chunk = text.slice(startIndex, endIndex);
   const content = await fetchChatCompletion(chunk, promptBuilder);
 
+  console.log(content);
+
   let parsedContent;
   try {
     parsedContent = JSON.parse(cleanJsonMarkdown(content));

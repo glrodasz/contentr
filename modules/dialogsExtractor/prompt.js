@@ -20,7 +20,8 @@ Requirements:
 - Extracting multiple dialogues is encourage as long as each dialog is at least 400 words long but not longer than 600 words. It's better to return one dialogue than multiple dialogues that are too short or too long.
 - Avoid including any meta-commentary about the text and its language, or an apology or comment. Focus on extracting the dialogues.
 - The output should be formatted in JSON array, but as plain text. Each array object should have two properties: 'title' and 'dialogue'.
--  NEVER use markdown for the output response, just plain text.
+- NEVER use markdown for the output response, just plain text.
+- ALWAYS make sure the response is a valid JSON array that ends correctly.
 `,
     },
     {

@@ -1,5 +1,5 @@
 export const RESPONSE_TOKEN_PERCENTAGE_ALLOCATION = 40;
-export const SAFETY_MARGIN = 100;
+export const SAFETY_MARGIN = 500;
 
 export function calculateMaxChunkSize(promptTokenCount, modelTokenLimit) {
   const responseTokenEstimate =
