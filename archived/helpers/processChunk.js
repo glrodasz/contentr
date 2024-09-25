@@ -1,4 +1,4 @@
-import { cleanJsonMarkdown } from "../helpers/cleanJsonMarkdown.js";
+import { cleanJsonMarkdown } from "./cleanJsonMarkdown.js";
 import { fetchChatCompletion } from "../clients/openAI/index.js";
 
 export async function processChunk(text, promptBuilder, startIndex, endIndex) {

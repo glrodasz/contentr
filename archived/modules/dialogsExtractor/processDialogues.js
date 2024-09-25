@@ -1,4 +1,4 @@
-import { countWords } from "../../utils/index.js";
+import { countWords } from "../../../utils/index.js";
 
 
 export function processDialogues(dialogueArray) {
