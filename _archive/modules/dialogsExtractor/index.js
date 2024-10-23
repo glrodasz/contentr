@@ -1,17 +1,17 @@
 import {
-  fileOperations,
   countWords,
   displayProgressBar,
+  fileOperations,
   getTimestamp,
+  sleep,
   time,
-  sleep
 } from "../../utils/index.js";
 
 import {
-  resolveEndIndex,
-  estimateTokenCount,
   calculateMaxChunkSize,
+  estimateTokenCount,
   processChunk,
+  resolveEndIndex,
 } from "../../helpers/index.js";
 
 import {
@@ -53,7 +53,7 @@ export async function extractDialogs(inputFilePath) {
 
       const maxTokenChunkSize = calculateMaxChunkSize(
         systemMessageTokenCount,
-        MODEL_TOKEN_LIMIT
+        MODEL_TOKEN_LIMIT,
       );
 
       endIndex = resolveEndIndex(text, startIndex, maxTokenChunkSize);
@@ -70,14 +70,14 @@ export async function extractDialogs(inputFilePath) {
           text,
           extractDialogsPrompt,
           startIndex,
-          endIndex
+          endIndex,
         );
         responseContent.push(chunkContent);
 
         titles.push(
           ...chunkContent.map(
-            (item) => `${item.title} (${countWords(item.dialogue)} words)`
-          )
+            (item) => `${item.title} (${countWords(item.dialogue)} words)`,
+          ),
         );
       } catch (processError) {
         console.error("Error processing chunk:", processError.message);

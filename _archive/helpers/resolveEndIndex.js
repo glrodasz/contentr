@@ -20,7 +20,10 @@ function isBeyondThreshold(nearestEnd, threshold) {
 }
 
 export function resolveEndIndex(text, startIndex, maxTokenChunkSize) {
-  const endIndex = Math.min(startIndex + (maxTokenChunkSize * AVERAGE_WORD_LENGTH), text.length);
+  const endIndex = Math.min(
+    startIndex + (maxTokenChunkSize * AVERAGE_WORD_LENGTH),
+    text.length,
+  );
   const chunk = text.slice(startIndex, endIndex);
 
   const sentenceEndIndices = findSentenceEndIndices(chunk);

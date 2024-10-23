@@ -1,6 +1,8 @@
 # Contentr
 
-The purpose of this tool is to extract releveant dialogues from a text file based on a podcast, youtuve video or recorded stream in order to get fragments suitable for 60 seconds video clips.
+The purpose of this tool is to extract releveant dialogues from a text file
+based on a podcast, youtuve video or recorded stream in order to get fragments
+suitable for 60 seconds video clips.
 
 ## Requirements
 
@@ -8,6 +10,7 @@ The purpose of this tool is to extract releveant dialogues from a text file base
 - An OpenAI API key
 
 ## Installation
+
 Install the necessary dependencies:
 
 ```bash
@@ -30,19 +33,20 @@ OPENAI_API_KEY=your_api_key_here
 
 ## Usage
 
-1. *Create an Input File:*
+1. _Create an Input File:_
    - Create a file named `input.txt` in the project root directory.
    - Add the text you want to process to this file.
 
-2. *Run the Script:*
+2. _Run the Script:_
    - Execute the script using npm:
 
 ```bash
 npm run start
 ```
 
-3. *View the Results:*
-   - The processed dialogues will be stored in the results folder, with each run generating a new folder named with a timestamp.
+3. _View the Results:_
+   - The processed dialogues will be stored in the results folder, with each run
+     generating a new folder named with a timestamp.
 
 ## License
 
