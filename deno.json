@@ -4,9 +4,6 @@
     "dev": "deno run --watch main.ts"
   },
   "imports": {
-    "@langchain/core": "npm:@langchain/core@^0.3.13",
-    "@langchain/openai": "npm:@langchain/openai@^0.3.11",
-    "@std/assert": "jsr:@std/assert@1",
-    "langchain": "npm:langchain@^0.3.3"
+    "@std/assert": "jsr:@std/assert@^1.0.6"
   }
 }

@@ -1,13 +1,14 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@std/assert@1": "1.0.6",
+    "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@langchain/core@~0.3.13": "0.3.13_zod@3.23.8",
     "npm:@langchain/openai@*": "0.3.11_@langchain+core@0.3.13__zod@3.23.8_zod@3.23.8_openai@4.68.2__zod@3.23.8",
     "npm:@langchain/openai@~0.3.11": "0.3.11_@langchain+core@0.3.13__zod@3.23.8_zod@3.23.8_openai@4.68.2__zod@3.23.8",
     "npm:@types/node@*": "22.5.4",
-    "npm:langchain@~0.3.3": "0.3.3_@langchain+core@0.3.13__zod@3.23.8_zod@3.23.8"
+    "npm:langchain@~0.3.3": "0.3.3_@langchain+core@0.3.13__zod@3.23.8_zod@3.23.8",
+    "npm:zod@^3.23.8": "3.23.8"
   },
   "jsr": {
     "@std/assert@1.0.6": {
@@ -355,10 +356,15 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@1",
-      "npm:@langchain/core@~0.3.13",
-      "npm:@langchain/openai@~0.3.11",
-      "npm:langchain@~0.3.3"
-    ]
+      "jsr:@std/assert@^1.0.6"
+    ],
+    "packageJson": {
+      "dependencies": [
+        "npm:@langchain/core@~0.3.13",
+        "npm:@langchain/openai@~0.3.11",
+        "npm:langchain@~0.3.3",
+        "npm:zod@^3.23.8"
+      ]
+    }
   }
 }

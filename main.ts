@@ -1,5 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { z } from "https://deno.land/x/zod/mod.ts";
+import { z } from "npm:zod";
 
 const model = new ChatOpenAI({
   model: "gpt-4o-mini",

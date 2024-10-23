@@ -1,0 +1,15 @@
+{
+  "name": "contentr",
+  "version": "1.0.0",
+  "description": "The purpose of this tool is to extract releveant dialogues from a text file based on a podcast, youtuve video or recorded stream in order to get fragments suitable for 60 seconds video clips.",
+  "main": "main.ts",
+  "keywords": [],
+  "author": "Guillermo Rodas",
+  "license": "MIT",
+  "dependencies": {
+    "@langchain/core": "^0.3.13",
+    "@langchain/openai": "^0.3.11",
+    "langchain": "^0.3.3",
+    "zod": "^3.23.8"
+  }
+}
