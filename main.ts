@@ -1,4 +1,4 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI } from "npm:@langchain/openai";
 import { z } from "npm:zod";
 
 const model = new ChatOpenAI({
