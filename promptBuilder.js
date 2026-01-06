@@ -1,11 +1,7 @@
 import { TOPICS } from "./config.js";
 
-export function buildMessages(text) {
-  return [
-    {
-      role: "system",
-      content: `
-Extract dialogues from a given text source. The source is a transcript that could be a podcast, a YouTube video, a recorded live stream, or similar source.
+export function buildSystemPrompt() {
+  return `Extract dialogues from a given text source. The source is a transcript that could be a podcast, a YouTube video, a recorded live stream, or similar source.
 
 The key task is to identify and extract one or more dialogues that are relevant, engaging, and meaninful on topics such as ${TOPICS}.
 
@@ -17,14 +13,23 @@ Requirements:
 - Extracting multiple dialogues is encourage as long as each dialog is at least 400 words long but not longer than 600 words. It's better to return one dialogue than multiple dialogues that are too short or too long.
 - Avoid including any meta-commentary about the text and its language, or an apology or comment. Focus on extracting the dialogues.
 - The output should be formatted in JSON array, but as plain text. Each array object should have two properties: 'title' and 'dialogue'.
--  NEVER use markdown for the output response, just plain text.
-`,
+-  NEVER use markdown for the output response, just plain text.`;
+}
+
+export function buildUserPrompt(text) {
+  return `Text source: "${text}"`;
+}
+
+// Keep backward compatibility for index.js token estimation
+export function buildMessages(text) {
+  return [
+    {
+      role: "system",
+      content: buildSystemPrompt(),
     },
     {
       role: "user",
-      content: `
-Text source: "${text}"
-`,
+      content: buildUserPrompt(text),
     },
   ];
 }

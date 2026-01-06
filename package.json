@@ -1,6 +1,6 @@
 {
   "name": "contentr",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "index.js",
   "license": "MIT",
   "type": "module",
@@ -8,8 +8,11 @@
     "debug": "node --inspect index.js",
     "start": "node index.js"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "dotenv": "^16.3.1",
-    "openai": "^3.3.0"
+    "@anthropic-ai/claude-agent-sdk": "^0.1.13",
+    "dotenv": "^16.3.1"
   }
 }

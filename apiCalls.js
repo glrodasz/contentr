@@ -1,31 +1,43 @@
 import dotenv from "dotenv";
+import { query } from "@anthropic-ai/claude-agent-sdk";
 
-import { Configuration, OpenAIApi } from "openai";
-
-import { buildMessages } from "./promptBuilder.js";
-import { GTP_MODEL } from "./config.js";
+import { buildSystemPrompt, buildUserPrompt } from "./promptBuilder.js";
+import { CLAUDE_MODEL } from "./config.js";
 
 dotenv.config();
 
-const { OPENAI_API_KEY } = process.env;
-const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
-const openai = new OpenAIApi(configuration);
-
 export async function fetchChatCompletion(chunk) {
-  const messages = buildMessages(chunk).map((message) => ({
-    ...message,
-    content: message.content.trim(),
-  }));
+  const systemPrompt = buildSystemPrompt();
+  const userPrompt = buildUserPrompt(chunk);
 
   try {
-    const response = await openai.createChatCompletion({
-      model: GTP_MODEL,
-      messages,
-      temperature: 0,
-    });
-    return response.data?.choices?.[0]?.message?.content?.trim() ?? "";
+    let assistantResponse = "";
+
+    // Use the Claude Agent SDK query function
+    for await (const message of query({
+      prompt: userPrompt,
+      options: {
+        model: CLAUDE_MODEL,
+        systemPrompt: systemPrompt,
+        maxTurns: 1,
+        allowedTools: [], // No tools needed, just text completion
+      },
+    })) {
+      // Collect the assistant's response
+      if (message.type === "assistant") {
+        if (Array.isArray(message.message?.content)) {
+          for (const block of message.message.content) {
+            if (block.type === "text") {
+              assistantResponse += block.text;
+            }
+          }
+        }
+      }
+    }
+
+    return assistantResponse.trim();
   } catch (error) {
-    console.error("Error during API call:", error.message);
+    console.error("Error during Claude API call:", error.message);
     throw error;
   }
 }

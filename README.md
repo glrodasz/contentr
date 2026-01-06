@@ -4,8 +4,8 @@ The purpose of this tool is to extract releveant dialogues from a text file base
 
 ## Requirements
 
-- Node.js (mention the minimum version if applicable)
-- An OpenAI API key
+- Node.js 18 or higher
+- An Anthropic API key
 
 ## Installation
 Install the necessary dependencies:
@@ -22,11 +22,13 @@ Copy the `.env.example` file to a new file named `.env`:
 cp .env.example .env
 ```
 
-Edit the `.env` file and add your OpenAI API key:
+Edit the `.env` file and add your Anthropic API key:
 
 ```
-OPENAI_API_KEY=your_api_key_here
+ANTHROPIC_API_KEY=your_api_key_here
 ```
+
+You can get an API key from [Anthropic Console](https://console.anthropic.com/).
 
 ## Usage
 
@@ -43,6 +45,14 @@ npm run start
 
 3. *View the Results:*
    - The processed dialogues will be stored in the results folder, with each run generating a new folder named with a timestamp.
+
+## Technical Details
+
+This tool uses the [Claude Agent SDK](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk) to interact with Claude Sonnet 4.5 for intelligent dialogue extraction. The SDK provides:
+
+- Reliable API interactions
+- Automatic token management
+- Streaming response handling
 
 ## License
 

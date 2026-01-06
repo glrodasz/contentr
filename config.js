@@ -1,10 +1,11 @@
 import { buildTopics } from "./buildTopics.js";
 
-// Model configuration
-export const MODEL_TOKEN_LIMIT = 16385;
-export const SAFETY_MARGIN = 200;
+// Claude model configuration
+// Claude Sonnet 4.5 has a 200k token context window
+export const MODEL_TOKEN_LIMIT = 32000; // Conservative limit for reliable processing
+export const SAFETY_MARGIN = 500;
 export const RESPONSE_TOKEN_PERCENTAGE_ALLOCATION = 40;
-export const GTP_MODEL = "gpt-3.5-turbo-1106";
+export const CLAUDE_MODEL = "claude-sonnet-4-5-20250929";
 
 // Text processing
 export const SENTENCE_END_THRESHOLD_PERCENTAGE = 75;
