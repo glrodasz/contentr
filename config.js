@@ -27,5 +27,5 @@ export const TOPICS = buildTopics([
   "security",
   "ideas",
   "inspiration",
-  "motivation"
+  "motivation",
 ]);

@@ -8,6 +8,7 @@ The purpose of this tool is to extract releveant dialogues from a text file base
 - An Anthropic API key
 
 ## Installation
+
 Install the necessary dependencies:
 
 ```bash
@@ -32,18 +33,18 @@ You can get an API key from [Anthropic Console](https://console.anthropic.com/).
 
 ## Usage
 
-1. *Create an Input File:*
+1. _Create an Input File:_
    - Create a file named `input.txt` in the project root directory.
    - Add the text you want to process to this file.
 
-2. *Run the Script:*
+2. _Run the Script:_
    - Execute the script using npm:
 
 ```bash
 npm run start
 ```
 
-3. *View the Results:*
+3. _View the Results:_
    - The processed dialogues will be stored in the results folder, with each run generating a new folder named with a timestamp.
 
 ## Multi-Agent Architecture

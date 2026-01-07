@@ -40,7 +40,9 @@ export async function processChunkWithAgents(chunk) {
     return [];
   }
 
-  console.log(`  ✅ Extractor Agent: Found ${extractedDialogues.length} potential dialogue(s)`);
+  console.log(
+    `  ✅ Extractor Agent: Found ${extractedDialogues.length} potential dialogue(s)`
+  );
   console.log("  🔎 Validator Agent: Reviewing extracted dialogues...");
 
   // Step 2: Validate dialogues using the Validator Agent
@@ -58,7 +60,9 @@ export async function processChunkWithAgents(chunk) {
   );
   const rejectedCount = validatedDialogues.length - approvedDialogues.length;
 
-  console.log(`  ✅ Validator Agent: ${approvedDialogues.length} approved, ${rejectedCount} rejected`);
+  console.log(
+    `  ✅ Validator Agent: ${approvedDialogues.length} approved, ${rejectedCount} rejected`
+  );
 
   // Log rejection reasons
   validatedDialogues

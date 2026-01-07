@@ -43,7 +43,7 @@ async function getDialogs(inputFilePath) {
     let startIndex = 0;
     let endIndex;
     let responseContent = [];
-    let titles = [];
+    const titles = [];
     let chunkNumber = 0;
 
     console.log(`📄 Processing input file: ${inputFilePath}`);
