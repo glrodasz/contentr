@@ -46,13 +46,54 @@ npm run start
 3. *View the Results:*
    - The processed dialogues will be stored in the results folder, with each run generating a new folder named with a timestamp.
 
-## Technical Details
+## Multi-Agent Architecture
 
-This tool uses the [Claude Agent SDK](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk) to interact with Claude Sonnet 4.5 for intelligent dialogue extraction. The SDK provides:
+This tool uses a multi-agent system powered by the [Claude Agent SDK](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk):
 
-- Reliable API interactions
-- Automatic token management
-- Streaming response handling
+### Agents
+
+1. **Extractor Agent** (`agents/extractorAgent.js`)
+   - Analyzes text chunks to identify relevant dialogues
+   - Extracts complete, standalone discussions on target topics
+   - Suggests titles for each dialogue
+
+2. **Validator Agent** (`agents/validatorAgent.js`)
+   - Reviews extracted dialogues for quality compliance
+   - Validates word count (400-600 words)
+   - Ensures content integrity matches original text
+   - Approves or rejects dialogues with detailed reasoning
+
+3. **Orchestrator** (`agents/orchestrator.js`)
+   - Coordinates the multi-agent workflow
+   - Passes chunks to Extractor Agent
+   - Sends results to Validator Agent for review
+   - Filters and returns only approved dialogues
+
+### Processing Flow
+
+```
+Input Text
+    ↓
+Chunk Calculator (token-aware splitting)
+    ↓
+┌─────────────────────────────────────┐
+│  Extractor Agent                    │
+│  - Identifies relevant dialogues    │
+│  - Extracts complete discussions    │
+│  - Suggests titles                  │
+└─────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────┐
+│  Validator Agent                    │
+│  - Reviews extracted content        │
+│  - Validates against criteria       │
+│  - Approves or rejects dialogues    │
+└─────────────────────────────────────┘
+    ↓
+Results Aggregator (approved dialogues only)
+    ↓
+Output JSON File
+```
 
 ## License
 
